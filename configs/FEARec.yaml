@@ -1,0 +1,68 @@
+n_layers: 2                      # (int) The number of transformer layers in transformer encoder.
+n_heads: 2                       # (int) The number of attention heads for multi-head attention layer.
+hidden_size: 64                  # (int) The number of features in the hidden state
+inner_size: 256                  # (int) The inner hidden size in feed-forward layer.
+hidden_dropout_prob: 0.5         # (float) The probability of an element to be zeroed.
+attn_dropout_prob: 0.5           # (float) The probability of an attention score to be zeroed.
+hidden_act: 'gelu'               # (str) The activation function in feed-forward layer.
+layer_norm_eps: 1e-12            # (float) A value added to the denominator for numerical stability.
+initializer_range: 0.02          # (float) The standard deviation for normal initialization.
+loss_type: 'CE'                  # (str) The type of loss function.
+lmd: 0.1                         # (float) The weight of unsupervised normalized CE loss.
+lmd_sem: 0.1                     # (float) The weight of supervised normalized CE loss.
+
+global_ratio: 1                  # (float) The ratio of frequency components
+dual_domain: False               # (bool) Frequency domain processing or not
+std: False                       # (bool) Use the specific time index or not
+spatial_ratio: 0                 # (float) The ratio of the spatial domain and frequency domain
+fredom: False                    # (bool)  Regularization in the frequency domain or not
+fredom_type: None                # (str)  The type of loss in different scenarios
+topk_factor: 1                   # (int)  To aggregate time delayed sequences with high autocorrelation
+
+gpu_id: '0'
+log_wandb: False
+
+
+num_layers: 2                   # (int) Number of Mamba layers.
+dropout_prob: 0.2               # (float) Dropout rate.
+#loss_type: 'CE'                 # (str) Type of loss function. Range in ['BPR', 'CE'].
+
+d_state: 32                     # (int) SSM state expansion factor
+d_conv: 4                       # (int) Local convolution width
+expand: 2                       # (int) Block expansion factor
+
+dataset: Beauty
+MAX_ITEM_LIST_LENGTH: 50       # 200 for MovieLens-1M
+
+
+
+USER_ID_FIELD: user_id
+ITEM_ID_FIELD: item_id
+load_col:
+    inter: [user_id, item_id, timestamp]
+
+user_inter_num_interval: "[5,inf)"
+item_inter_num_interval: "[5,inf)"
+
+# training settings
+epochs: 300
+train_batch_size: 2048
+learner: adam
+learning_rate: 0.001
+eval_step: 1
+stopping_step: 5
+train_neg_sample_args: ~
+
+
+# evalution settings
+metrics: ['Hit', 'NDCG', 'MRR']
+valid_metric: Hit@20
+eval_batch_size: 4096
+weight_decay: 0.0
+topk: [5,10,20]
+
+
+
+#lmd: 0.1
+tau: 1
+

@@ -1,0 +1,433 @@
+Wed 11 Sep 2024 23:52:24 INFO  ['/data/Chester/new_M3Rec/run_M3Rec.py']
+Wed 11 Sep 2024 23:52:24 INFO  
+General Hyper Parameters:
+gpu_id = 0
+use_gpu = True
+seed = 2024
+state = INFO
+reproducibility = True
+data_path = dataset/Beauty
+checkpoint_dir = saved
+show_progress = True
+save_dataset = False
+dataset_save_path = None
+save_dataloaders = False
+dataloaders_save_path = None
+log_wandb = False
+
+Training Hyper Parameters:
+epochs = 300
+train_batch_size = 2048
+learner = adam
+learning_rate = 0.001
+train_neg_sample_args = {'distribution': 'none', 'sample_num': 'none', 'alpha': 'none', 'dynamic': False, 'candidate_num': 0}
+eval_step = 1
+stopping_step = 5
+clip_grad_norm = None
+weight_decay = 0.0
+loss_decimal_place = 4
+
+Evaluation Hyper Parameters:
+eval_args = {'split': {'LS': 'valid_and_test'}, 'order': 'TO', 'group_by': 'user', 'mode': {'valid': 'full', 'test': 'full'}}
+repeatable = True
+metrics = ['Hit', 'NDCG', 'MRR']
+topk = [5, 10, 20]
+valid_metric = Hit@20
+valid_metric_bigger = True
+eval_batch_size = 4096
+metric_decimal_place = 4
+
+Dataset Hyper Parameters:
+field_separator = 	
+seq_separator =  
+USER_ID_FIELD = user_id
+ITEM_ID_FIELD = item_id
+RATING_FIELD = rating
+TIME_FIELD = timestamp
+seq_len = None
+LABEL_FIELD = label
+threshold = None
+NEG_PREFIX = neg_
+load_col = {'inter': ['user_id', 'item_id', 'timestamp']}
+unload_col = None
+unused_col = None
+additional_feat_suffix = None
+rm_dup_inter = None
+val_interval = None
+filter_inter_by_user_or_item = True
+user_inter_num_interval = [5,inf)
+item_inter_num_interval = [5,inf)
+alias_of_user_id = None
+alias_of_item_id = None
+alias_of_entity_id = None
+alias_of_relation_id = None
+preload_weight = None
+normalize_field = None
+normalize_all = None
+ITEM_LIST_LENGTH_FIELD = item_length
+LIST_SUFFIX = _list
+MAX_ITEM_LIST_LENGTH = 50
+POSITION_FIELD = position_id
+HEAD_ENTITY_ID_FIELD = head_id
+TAIL_ENTITY_ID_FIELD = tail_id
+RELATION_ID_FIELD = relation_id
+ENTITY_ID_FIELD = entity_id
+benchmark_filename = None
+
+Other Hyper Parameters: 
+worker = 0
+wandb_project = recbole
+shuffle = True
+require_pow = False
+enable_amp = False
+enable_scaler = False
+transform = None
+numerical_features = []
+discretization = None
+kg_reverse_r = False
+entity_kg_num_interval = [0,inf)
+relation_kg_num_interval = [0,inf)
+MODEL_TYPE = ModelType.SEQUENTIAL
+hidden_size = 64
+num_layers = 2
+dropout_prob = 0.5
+loss_type = CE
+d_state = 32
+d_conv = 4
+expand = 2
+MODEL_INPUT_TYPE = InputType.POINTWISE
+eval_type = EvaluatorType.RANKING
+single_spec = True
+local_rank = 0
+device = cuda
+valid_neg_sample_args = {'distribution': 'uniform', 'sample_num': 'none'}
+test_neg_sample_args = {'distribution': 'uniform', 'sample_num': 'none'}
+
+
+Wed 11 Sep 2024 23:52:24 INFO  Beauty
+The number of users: 22364
+Average actions of users: 8.876358270357287
+The number of items: 12102
+Average actions of items: 16.403768283612923
+The number of inters: 198502
+The sparsity of the dataset: 99.92665707018277%
+Remain Fields: ['user_id', 'item_id', 'timestamp']
+Wed 11 Sep 2024 23:52:27 INFO  [Training]: train_batch_size = [2048] train_neg_sample_args: [{'distribution': 'none', 'sample_num': 'none', 'alpha': 'none', 'dynamic': False, 'candidate_num': 0}]
+Wed 11 Sep 2024 23:52:27 INFO  [Evaluation]: eval_batch_size = [4096] eval_args: [{'split': {'LS': 'valid_and_test'}, 'order': 'TO', 'group_by': 'user', 'mode': {'valid': 'full', 'test': 'full'}}]
+Wed 11 Sep 2024 23:52:28 INFO  M3Rec(
+  (img_feat): Embedding(12102, 512)
+  (text_feat): Embedding(12102, 768)
+  (item_embedding): Embedding(12102, 64, padding_idx=0)
+  (LayerNorm): LayerNorm((64,), eps=1e-12, elementwise_affine=True)
+  (dropout): Dropout(p=0.5, inplace=False)
+  (img_trans): Sequential(
+    (0): Linear(in_features=512, out_features=64, bias=True)
+    (1): LeakyReLU(negative_slope=0.01)
+    (2): Linear(in_features=64, out_features=64, bias=True)
+  )
+  (text_trans): Sequential(
+    (0): Linear(in_features=768, out_features=64, bias=True)
+    (1): LeakyReLU(negative_slope=0.01)
+    (2): Linear(in_features=64, out_features=64, bias=True)
+  )
+  (img_LayerNorm): LayerNorm((64,), eps=1e-12, elementwise_affine=True)
+  (text_LayerNorm): LayerNorm((64,), eps=1e-12, elementwise_affine=True)
+  (mamba_block): ModuleList(
+    (0-1): 2 x MambaBlock(
+      (mamba): Mamba(
+        (in_proj): Linear(in_features=64, out_features=256, bias=False)
+        (conv1d): Conv1d(128, 128, kernel_size=(4,), stride=(1,), padding=(3,), groups=128)
+        (act): SiLU()
+        (x_proj): Linear(in_features=128, out_features=68, bias=False)
+        (dt_proj): Linear(in_features=4, out_features=128, bias=True)
+        (out_proj): Linear(in_features=128, out_features=64, bias=False)
+      )
+      (dropout): Dropout(p=0.5, inplace=False)
+      (LayerNorm): LayerNorm((64,), eps=1e-12, elementwise_affine=True)
+    )
+  )
+  (id_mamba_ffn): ModuleList(
+    (0-1): 2 x FeedForward(
+      (w_1): Linear(in_features=64, out_features=256, bias=True)
+      (w_2): Linear(in_features=256, out_features=64, bias=True)
+      (activation): GELU(approximate='none')
+      (dropout): Dropout(p=0.5, inplace=False)
+      (LayerNorm): LayerNorm((64,), eps=1e-12, elementwise_affine=True)
+    )
+  )
+  (img_mamba_ffn): ModuleList(
+    (0-1): 2 x FeedForward(
+      (w_1): Linear(in_features=64, out_features=256, bias=True)
+      (w_2): Linear(in_features=256, out_features=64, bias=True)
+      (activation): GELU(approximate='none')
+      (dropout): Dropout(p=0.5, inplace=False)
+      (LayerNorm): LayerNorm((64,), eps=1e-12, elementwise_affine=True)
+    )
+  )
+  (text_mamba_ffn): ModuleList(
+    (0-1): 2 x FeedForward(
+      (w_1): Linear(in_features=64, out_features=256, bias=True)
+      (w_2): Linear(in_features=256, out_features=64, bias=True)
+      (activation): GELU(approximate='none')
+      (dropout): Dropout(p=0.5, inplace=False)
+      (LayerNorm): LayerNorm((64,), eps=1e-12, elementwise_affine=True)
+    )
+  )
+  (loss_fct): CrossEntropyLoss()
+)
+Trainable parameters: 1142402
+Wed 11 Sep 2024 23:52:28 INFO  FLOPs: 19822272.0
+Wed 11 Sep 2024 23:52:37 INFO  epoch 0 training [time: 8.61s, train loss: 593.5759]
+Wed 11 Sep 2024 23:52:38 INFO  epoch 0 evaluating [time: 0.83s, valid_score: 0.030400]
+Wed 11 Sep 2024 23:52:38 INFO  valid result: 
+hit@5 : 0.011    hit@10 : 0.0186    hit@20 : 0.0304    ndcg@5 : 0.007    ndcg@10 : 0.0094    ndcg@20 : 0.0124    mrr@5 : 0.0056    mrr@10 : 0.0066    mrr@20 : 0.0074
+Wed 11 Sep 2024 23:52:38 INFO  Saving current: saved/M3Rec-Sep-11-2024_23-52-28.pth
+Wed 11 Sep 2024 23:52:46 INFO  epoch 1 training [time: 8.63s, train loss: 556.1691]
+Wed 11 Sep 2024 23:52:47 INFO  epoch 1 evaluating [time: 0.83s, valid_score: 0.055300]
+Wed 11 Sep 2024 23:52:47 INFO  valid result: 
+hit@5 : 0.0194    hit@10 : 0.0359    hit@20 : 0.0553    ndcg@5 : 0.012    ndcg@10 : 0.0174    ndcg@20 : 0.0223    mrr@5 : 0.0096    mrr@10 : 0.0118    mrr@20 : 0.0132
+Wed 11 Sep 2024 23:52:48 INFO  Saving current: saved/M3Rec-Sep-11-2024_23-52-28.pth
+Wed 11 Sep 2024 23:52:56 INFO  epoch 2 training [time: 8.70s, train loss: 529.4061]
+Wed 11 Sep 2024 23:52:57 INFO  epoch 2 evaluating [time: 0.84s, valid_score: 0.072100]
+Wed 11 Sep 2024 23:52:57 INFO  valid result: 
+hit@5 : 0.0241    hit@10 : 0.0459    hit@20 : 0.0721    ndcg@5 : 0.0156    ndcg@10 : 0.0226    ndcg@20 : 0.0292    mrr@5 : 0.0128    mrr@10 : 0.0157    mrr@20 : 0.0175
+Wed 11 Sep 2024 23:52:58 INFO  Saving current: saved/M3Rec-Sep-11-2024_23-52-28.pth
+Wed 11 Sep 2024 23:53:06 INFO  epoch 3 training [time: 8.79s, train loss: 509.7889]
+Wed 11 Sep 2024 23:53:07 INFO  epoch 3 evaluating [time: 0.85s, valid_score: 0.082700]
+Wed 11 Sep 2024 23:53:07 INFO  valid result: 
+hit@5 : 0.0323    hit@10 : 0.0536    hit@20 : 0.0827    ndcg@5 : 0.0196    ndcg@10 : 0.0264    ndcg@20 : 0.0338    mrr@5 : 0.0155    mrr@10 : 0.0183    mrr@20 : 0.0203
+Wed 11 Sep 2024 23:53:08 INFO  Saving current: saved/M3Rec-Sep-11-2024_23-52-28.pth
+Wed 11 Sep 2024 23:53:16 INFO  epoch 4 training [time: 8.83s, train loss: 496.0541]
+Wed 11 Sep 2024 23:53:17 INFO  epoch 4 evaluating [time: 0.86s, valid_score: 0.092400]
+Wed 11 Sep 2024 23:53:17 INFO  valid result: 
+hit@5 : 0.0356    hit@10 : 0.0598    hit@20 : 0.0924    ndcg@5 : 0.0226    ndcg@10 : 0.0305    ndcg@20 : 0.0386    mrr@5 : 0.0184    mrr@10 : 0.0216    mrr@20 : 0.0239
+Wed 11 Sep 2024 23:53:18 INFO  Saving current: saved/M3Rec-Sep-11-2024_23-52-28.pth
+Wed 11 Sep 2024 23:53:27 INFO  epoch 5 training [time: 8.88s, train loss: 485.2003]
+Wed 11 Sep 2024 23:53:27 INFO  epoch 5 evaluating [time: 0.86s, valid_score: 0.102400]
+Wed 11 Sep 2024 23:53:27 INFO  valid result: 
+hit@5 : 0.0438    hit@10 : 0.0683    hit@20 : 0.1024    ndcg@5 : 0.0277    ndcg@10 : 0.0356    ndcg@20 : 0.0442    mrr@5 : 0.0224    mrr@10 : 0.0257    mrr@20 : 0.028
+Wed 11 Sep 2024 23:53:28 INFO  Saving current: saved/M3Rec-Sep-11-2024_23-52-28.pth
+Wed 11 Sep 2024 23:53:37 INFO  epoch 6 training [time: 8.99s, train loss: 476.0740]
+Wed 11 Sep 2024 23:53:38 INFO  epoch 6 evaluating [time: 0.91s, valid_score: 0.111600]
+Wed 11 Sep 2024 23:53:38 INFO  valid result: 
+hit@5 : 0.0488    hit@10 : 0.0737    hit@20 : 0.1116    ndcg@5 : 0.0313    ndcg@10 : 0.0394    ndcg@20 : 0.0489    mrr@5 : 0.0256    mrr@10 : 0.0289    mrr@20 : 0.0315
+Wed 11 Sep 2024 23:53:38 INFO  Saving current: saved/M3Rec-Sep-11-2024_23-52-28.pth
+Wed 11 Sep 2024 23:53:47 INFO  epoch 7 training [time: 9.21s, train loss: 467.8768]
+Wed 11 Sep 2024 23:53:48 INFO  epoch 7 evaluating [time: 0.90s, valid_score: 0.117900]
+Wed 11 Sep 2024 23:53:48 INFO  valid result: 
+hit@5 : 0.052    hit@10 : 0.0807    hit@20 : 0.1179    ndcg@5 : 0.0335    ndcg@10 : 0.0427    ndcg@20 : 0.0521    mrr@5 : 0.0274    mrr@10 : 0.0312    mrr@20 : 0.0338
+Wed 11 Sep 2024 23:53:49 INFO  Saving current: saved/M3Rec-Sep-11-2024_23-52-28.pth
+Wed 11 Sep 2024 23:53:58 INFO  epoch 8 training [time: 9.27s, train loss: 460.3515]
+Wed 11 Sep 2024 23:53:59 INFO  epoch 8 evaluating [time: 0.94s, valid_score: 0.125100]
+Wed 11 Sep 2024 23:53:59 INFO  valid result: 
+hit@5 : 0.0553    hit@10 : 0.0859    hit@20 : 0.1251    ndcg@5 : 0.0341    ndcg@10 : 0.044    ndcg@20 : 0.0539    mrr@5 : 0.0272    mrr@10 : 0.0313    mrr@20 : 0.034
+Wed 11 Sep 2024 23:54:00 INFO  Saving current: saved/M3Rec-Sep-11-2024_23-52-28.pth
+Wed 11 Sep 2024 23:54:09 INFO  epoch 9 training [time: 9.28s, train loss: 453.4979]
+Wed 11 Sep 2024 23:54:10 INFO  epoch 9 evaluating [time: 0.92s, valid_score: 0.130300]
+Wed 11 Sep 2024 23:54:10 INFO  valid result: 
+hit@5 : 0.0587    hit@10 : 0.0895    hit@20 : 0.1303    ndcg@5 : 0.0363    ndcg@10 : 0.0462    ndcg@20 : 0.0565    mrr@5 : 0.029    mrr@10 : 0.033    mrr@20 : 0.0358
+Wed 11 Sep 2024 23:54:10 INFO  Saving current: saved/M3Rec-Sep-11-2024_23-52-28.pth
+Wed 11 Sep 2024 23:54:20 INFO  epoch 10 training [time: 9.37s, train loss: 447.3846]
+Wed 11 Sep 2024 23:54:20 INFO  epoch 10 evaluating [time: 0.91s, valid_score: 0.134200]
+Wed 11 Sep 2024 23:54:20 INFO  valid result: 
+hit@5 : 0.061    hit@10 : 0.0904    hit@20 : 0.1342    ndcg@5 : 0.0376    ndcg@10 : 0.0471    ndcg@20 : 0.0581    mrr@5 : 0.03    mrr@10 : 0.0339    mrr@20 : 0.0369
+Wed 11 Sep 2024 23:54:21 INFO  Saving current: saved/M3Rec-Sep-11-2024_23-52-28.pth
+Wed 11 Sep 2024 23:54:30 INFO  epoch 11 training [time: 9.40s, train loss: 442.1010]
+Wed 11 Sep 2024 23:54:31 INFO  epoch 11 evaluating [time: 0.91s, valid_score: 0.138000]
+Wed 11 Sep 2024 23:54:31 INFO  valid result: 
+hit@5 : 0.0627    hit@10 : 0.0956    hit@20 : 0.138    ndcg@5 : 0.0386    ndcg@10 : 0.0492    ndcg@20 : 0.0598    mrr@5 : 0.0307    mrr@10 : 0.035    mrr@20 : 0.0379
+Wed 11 Sep 2024 23:54:32 INFO  Saving current: saved/M3Rec-Sep-11-2024_23-52-28.pth
+Wed 11 Sep 2024 23:54:41 INFO  epoch 12 training [time: 9.39s, train loss: 436.6494]
+Wed 11 Sep 2024 23:54:42 INFO  epoch 12 evaluating [time: 0.92s, valid_score: 0.139900]
+Wed 11 Sep 2024 23:54:42 INFO  valid result: 
+hit@5 : 0.064    hit@10 : 0.0975    hit@20 : 0.1399    ndcg@5 : 0.0384    ndcg@10 : 0.0492    ndcg@20 : 0.0598    mrr@5 : 0.03    mrr@10 : 0.0344    mrr@20 : 0.0373
+Wed 11 Sep 2024 23:54:42 INFO  Saving current: saved/M3Rec-Sep-11-2024_23-52-28.pth
+Wed 11 Sep 2024 23:54:52 INFO  epoch 13 training [time: 9.40s, train loss: 432.6444]
+Wed 11 Sep 2024 23:54:53 INFO  epoch 13 evaluating [time: 0.92s, valid_score: 0.142600]
+Wed 11 Sep 2024 23:54:53 INFO  valid result: 
+hit@5 : 0.0652    hit@10 : 0.1    hit@20 : 0.1426    ndcg@5 : 0.039    ndcg@10 : 0.0503    ndcg@20 : 0.061    mrr@5 : 0.0305    mrr@10 : 0.0351    mrr@20 : 0.038
+Wed 11 Sep 2024 23:54:53 INFO  Saving current: saved/M3Rec-Sep-11-2024_23-52-28.pth
+Wed 11 Sep 2024 23:55:03 INFO  epoch 14 training [time: 9.43s, train loss: 428.1221]
+Wed 11 Sep 2024 23:55:04 INFO  epoch 14 evaluating [time: 0.91s, valid_score: 0.143600]
+Wed 11 Sep 2024 23:55:04 INFO  valid result: 
+hit@5 : 0.0667    hit@10 : 0.1003    hit@20 : 0.1436    ndcg@5 : 0.0399    ndcg@10 : 0.0507    ndcg@20 : 0.0616    mrr@5 : 0.0311    mrr@10 : 0.0355    mrr@20 : 0.0385
+Wed 11 Sep 2024 23:55:04 INFO  Saving current: saved/M3Rec-Sep-11-2024_23-52-28.pth
+Wed 11 Sep 2024 23:55:13 INFO  epoch 15 training [time: 9.42s, train loss: 424.2915]
+Wed 11 Sep 2024 23:55:14 INFO  epoch 15 evaluating [time: 0.93s, valid_score: 0.144600]
+Wed 11 Sep 2024 23:55:14 INFO  valid result: 
+hit@5 : 0.0679    hit@10 : 0.1012    hit@20 : 0.1446    ndcg@5 : 0.0408    ndcg@10 : 0.0515    ndcg@20 : 0.0625    mrr@5 : 0.0319    mrr@10 : 0.0363    mrr@20 : 0.0393
+Wed 11 Sep 2024 23:55:15 INFO  Saving current: saved/M3Rec-Sep-11-2024_23-52-28.pth
+Wed 11 Sep 2024 23:55:24 INFO  epoch 16 training [time: 9.47s, train loss: 420.8834]
+Wed 11 Sep 2024 23:55:25 INFO  epoch 16 evaluating [time: 0.92s, valid_score: 0.147700]
+Wed 11 Sep 2024 23:55:25 INFO  valid result: 
+hit@5 : 0.068    hit@10 : 0.1033    hit@20 : 0.1477    ndcg@5 : 0.04    ndcg@10 : 0.0513    ndcg@20 : 0.0625    mrr@5 : 0.0307    mrr@10 : 0.0354    mrr@20 : 0.0384
+Wed 11 Sep 2024 23:55:26 INFO  Saving current: saved/M3Rec-Sep-11-2024_23-52-28.pth
+Wed 11 Sep 2024 23:55:35 INFO  epoch 17 training [time: 9.55s, train loss: 418.0769]
+Wed 11 Sep 2024 23:55:36 INFO  epoch 17 evaluating [time: 0.91s, valid_score: 0.148100]
+Wed 11 Sep 2024 23:55:36 INFO  valid result: 
+hit@5 : 0.068    hit@10 : 0.1036    hit@20 : 0.1481    ndcg@5 : 0.0404    ndcg@10 : 0.0518    ndcg@20 : 0.0631    mrr@5 : 0.0314    mrr@10 : 0.036    mrr@20 : 0.0391
+Wed 11 Sep 2024 23:55:37 INFO  Saving current: saved/M3Rec-Sep-11-2024_23-52-28.pth
+Wed 11 Sep 2024 23:55:46 INFO  epoch 18 training [time: 9.53s, train loss: 415.6529]
+Wed 11 Sep 2024 23:55:47 INFO  epoch 18 evaluating [time: 0.92s, valid_score: 0.147600]
+Wed 11 Sep 2024 23:55:47 INFO  valid result: 
+hit@5 : 0.069    hit@10 : 0.104    hit@20 : 0.1476    ndcg@5 : 0.0409    ndcg@10 : 0.0521    ndcg@20 : 0.0631    mrr@5 : 0.0317    mrr@10 : 0.0362    mrr@20 : 0.0392
+Wed 11 Sep 2024 23:55:57 INFO  epoch 19 training [time: 9.51s, train loss: 413.0109]
+Wed 11 Sep 2024 23:55:57 INFO  epoch 19 evaluating [time: 0.93s, valid_score: 0.147700]
+Wed 11 Sep 2024 23:55:57 INFO  valid result: 
+hit@5 : 0.0701    hit@10 : 0.1047    hit@20 : 0.1477    ndcg@5 : 0.0413    ndcg@10 : 0.0525    ndcg@20 : 0.0633    mrr@5 : 0.0318    mrr@10 : 0.0364    mrr@20 : 0.0394
+Wed 11 Sep 2024 23:56:07 INFO  epoch 20 training [time: 9.56s, train loss: 411.1986]
+Wed 11 Sep 2024 23:56:08 INFO  epoch 20 evaluating [time: 0.93s, valid_score: 0.148100]
+Wed 11 Sep 2024 23:56:08 INFO  valid result: 
+hit@5 : 0.0702    hit@10 : 0.1044    hit@20 : 0.1481    ndcg@5 : 0.0414    ndcg@10 : 0.0524    ndcg@20 : 0.0635    mrr@5 : 0.0319    mrr@10 : 0.0364    mrr@20 : 0.0394
+Wed 11 Sep 2024 23:56:08 INFO  Saving current: saved/M3Rec-Sep-11-2024_23-52-28.pth
+Wed 11 Sep 2024 23:56:18 INFO  epoch 21 training [time: 9.58s, train loss: 409.2767]
+Wed 11 Sep 2024 23:56:19 INFO  epoch 21 evaluating [time: 0.94s, valid_score: 0.147100]
+Wed 11 Sep 2024 23:56:19 INFO  valid result: 
+hit@5 : 0.0703    hit@10 : 0.105    hit@20 : 0.1471    ndcg@5 : 0.0412    ndcg@10 : 0.0523    ndcg@20 : 0.0629    mrr@5 : 0.0315    mrr@10 : 0.0361    mrr@20 : 0.039
+Wed 11 Sep 2024 23:56:28 INFO  epoch 22 training [time: 9.54s, train loss: 407.6805]
+Wed 11 Sep 2024 23:56:29 INFO  epoch 22 evaluating [time: 0.93s, valid_score: 0.149400]
+Wed 11 Sep 2024 23:56:29 INFO  valid result: 
+hit@5 : 0.0696    hit@10 : 0.1058    hit@20 : 0.1494    ndcg@5 : 0.041    ndcg@10 : 0.0527    ndcg@20 : 0.0637    mrr@5 : 0.0316    mrr@10 : 0.0364    mrr@20 : 0.0394
+Wed 11 Sep 2024 23:56:30 INFO  Saving current: saved/M3Rec-Sep-11-2024_23-52-28.pth
+Wed 11 Sep 2024 23:56:39 INFO  epoch 23 training [time: 9.52s, train loss: 406.2018]
+Wed 11 Sep 2024 23:56:40 INFO  epoch 23 evaluating [time: 0.96s, valid_score: 0.149800]
+Wed 11 Sep 2024 23:56:40 INFO  valid result: 
+hit@5 : 0.0712    hit@10 : 0.1065    hit@20 : 0.1498    ndcg@5 : 0.0417    ndcg@10 : 0.053    ndcg@20 : 0.0639    mrr@5 : 0.032    mrr@10 : 0.0366    mrr@20 : 0.0396
+Wed 11 Sep 2024 23:56:41 INFO  Saving current: saved/M3Rec-Sep-11-2024_23-52-28.pth
+Wed 11 Sep 2024 23:56:50 INFO  epoch 24 training [time: 9.52s, train loss: 404.9439]
+Wed 11 Sep 2024 23:56:51 INFO  epoch 24 evaluating [time: 0.94s, valid_score: 0.148900]
+Wed 11 Sep 2024 23:56:51 INFO  valid result: 
+hit@5 : 0.0697    hit@10 : 0.105    hit@20 : 0.1489    ndcg@5 : 0.0408    ndcg@10 : 0.0522    ndcg@20 : 0.0632    mrr@5 : 0.0312    mrr@10 : 0.0359    mrr@20 : 0.0389
+Wed 11 Sep 2024 23:57:01 INFO  epoch 25 training [time: 9.61s, train loss: 403.8468]
+Wed 11 Sep 2024 23:57:02 INFO  epoch 25 evaluating [time: 0.94s, valid_score: 0.151200]
+Wed 11 Sep 2024 23:57:02 INFO  valid result: 
+hit@5 : 0.0719    hit@10 : 0.1076    hit@20 : 0.1512    ndcg@5 : 0.042    ndcg@10 : 0.0535    ndcg@20 : 0.0644    mrr@5 : 0.0321    mrr@10 : 0.0368    mrr@20 : 0.0398
+Wed 11 Sep 2024 23:57:02 INFO  Saving current: saved/M3Rec-Sep-11-2024_23-52-28.pth
+Wed 11 Sep 2024 23:57:12 INFO  epoch 26 training [time: 9.60s, train loss: 402.4877]
+Wed 11 Sep 2024 23:57:13 INFO  epoch 26 evaluating [time: 0.94s, valid_score: 0.150600]
+Wed 11 Sep 2024 23:57:13 INFO  valid result: 
+hit@5 : 0.0712    hit@10 : 0.1054    hit@20 : 0.1506    ndcg@5 : 0.0407    ndcg@10 : 0.0517    ndcg@20 : 0.0631    mrr@5 : 0.0307    mrr@10 : 0.0352    mrr@20 : 0.0383
+Wed 11 Sep 2024 23:57:22 INFO  epoch 27 training [time: 9.60s, train loss: 401.5571]
+Wed 11 Sep 2024 23:57:23 INFO  epoch 27 evaluating [time: 0.95s, valid_score: 0.150700]
+Wed 11 Sep 2024 23:57:23 INFO  valid result: 
+hit@5 : 0.0711    hit@10 : 0.1064    hit@20 : 0.1507    ndcg@5 : 0.0412    ndcg@10 : 0.0525    ndcg@20 : 0.0637    mrr@5 : 0.0313    mrr@10 : 0.036    mrr@20 : 0.039
+Wed 11 Sep 2024 23:57:33 INFO  epoch 28 training [time: 9.62s, train loss: 400.5990]
+Wed 11 Sep 2024 23:57:34 INFO  epoch 28 evaluating [time: 0.94s, valid_score: 0.151700]
+Wed 11 Sep 2024 23:57:34 INFO  valid result: 
+hit@5 : 0.0703    hit@10 : 0.1054    hit@20 : 0.1517    ndcg@5 : 0.0406    ndcg@10 : 0.052    ndcg@20 : 0.0636    mrr@5 : 0.0309    mrr@10 : 0.0355    mrr@20 : 0.0387
+Wed 11 Sep 2024 23:57:34 INFO  Saving current: saved/M3Rec-Sep-11-2024_23-52-28.pth
+Wed 11 Sep 2024 23:57:44 INFO  epoch 29 training [time: 9.61s, train loss: 399.7494]
+Wed 11 Sep 2024 23:57:45 INFO  epoch 29 evaluating [time: 0.94s, valid_score: 0.150800]
+Wed 11 Sep 2024 23:57:45 INFO  valid result: 
+hit@5 : 0.0721    hit@10 : 0.1071    hit@20 : 0.1508    ndcg@5 : 0.0422    ndcg@10 : 0.0535    ndcg@20 : 0.0645    mrr@5 : 0.0324    mrr@10 : 0.037    mrr@20 : 0.04
+Wed 11 Sep 2024 23:57:55 INFO  epoch 30 training [time: 9.61s, train loss: 398.9177]
+Wed 11 Sep 2024 23:57:56 INFO  epoch 30 evaluating [time: 0.94s, valid_score: 0.152100]
+Wed 11 Sep 2024 23:57:56 INFO  valid result: 
+hit@5 : 0.0714    hit@10 : 0.1062    hit@20 : 0.1521    ndcg@5 : 0.0414    ndcg@10 : 0.0526    ndcg@20 : 0.0641    mrr@5 : 0.0315    mrr@10 : 0.0361    mrr@20 : 0.0392
+Wed 11 Sep 2024 23:57:56 INFO  Saving current: saved/M3Rec-Sep-11-2024_23-52-28.pth
+Wed 11 Sep 2024 23:58:06 INFO  epoch 31 training [time: 9.61s, train loss: 398.2271]
+Wed 11 Sep 2024 23:58:06 INFO  epoch 31 evaluating [time: 0.93s, valid_score: 0.151300]
+Wed 11 Sep 2024 23:58:06 INFO  valid result: 
+hit@5 : 0.0709    hit@10 : 0.108    hit@20 : 0.1513    ndcg@5 : 0.0408    ndcg@10 : 0.0527    ndcg@20 : 0.0636    mrr@5 : 0.0308    mrr@10 : 0.0357    mrr@20 : 0.0387
+Wed 11 Sep 2024 23:58:16 INFO  epoch 32 training [time: 9.69s, train loss: 397.5511]
+Wed 11 Sep 2024 23:58:17 INFO  epoch 32 evaluating [time: 0.93s, valid_score: 0.152600]
+Wed 11 Sep 2024 23:58:17 INFO  valid result: 
+hit@5 : 0.0706    hit@10 : 0.1057    hit@20 : 0.1526    ndcg@5 : 0.0407    ndcg@10 : 0.052    ndcg@20 : 0.0638    mrr@5 : 0.0308    mrr@10 : 0.0354    mrr@20 : 0.0387
+Wed 11 Sep 2024 23:58:18 INFO  Saving current: saved/M3Rec-Sep-11-2024_23-52-28.pth
+Wed 11 Sep 2024 23:58:27 INFO  epoch 33 training [time: 9.60s, train loss: 396.5952]
+Wed 11 Sep 2024 23:58:28 INFO  epoch 33 evaluating [time: 0.97s, valid_score: 0.152200]
+Wed 11 Sep 2024 23:58:28 INFO  valid result: 
+hit@5 : 0.0715    hit@10 : 0.1068    hit@20 : 0.1522    ndcg@5 : 0.0409    ndcg@10 : 0.0523    ndcg@20 : 0.0637    mrr@5 : 0.0308    mrr@10 : 0.0354    mrr@20 : 0.0386
+Wed 11 Sep 2024 23:58:38 INFO  epoch 34 training [time: 9.63s, train loss: 395.9761]
+Wed 11 Sep 2024 23:58:39 INFO  epoch 34 evaluating [time: 0.94s, valid_score: 0.152900]
+Wed 11 Sep 2024 23:58:39 INFO  valid result: 
+hit@5 : 0.0715    hit@10 : 0.1076    hit@20 : 0.1529    ndcg@5 : 0.0415    ndcg@10 : 0.0531    ndcg@20 : 0.0646    mrr@5 : 0.0316    mrr@10 : 0.0364    mrr@20 : 0.0395
+Wed 11 Sep 2024 23:58:39 INFO  Saving current: saved/M3Rec-Sep-11-2024_23-52-28.pth
+Wed 11 Sep 2024 23:58:49 INFO  epoch 35 training [time: 9.62s, train loss: 395.5378]
+Wed 11 Sep 2024 23:58:50 INFO  epoch 35 evaluating [time: 0.93s, valid_score: 0.151300]
+Wed 11 Sep 2024 23:58:50 INFO  valid result: 
+hit@5 : 0.0724    hit@10 : 0.109    hit@20 : 0.1513    ndcg@5 : 0.042    ndcg@10 : 0.0538    ndcg@20 : 0.0645    mrr@5 : 0.032    mrr@10 : 0.0368    mrr@20 : 0.0398
+Wed 11 Sep 2024 23:58:59 INFO  epoch 36 training [time: 9.66s, train loss: 394.7024]
+Wed 11 Sep 2024 23:59:00 INFO  epoch 36 evaluating [time: 0.94s, valid_score: 0.151000]
+Wed 11 Sep 2024 23:59:00 INFO  valid result: 
+hit@5 : 0.0712    hit@10 : 0.1082    hit@20 : 0.151    ndcg@5 : 0.0416    ndcg@10 : 0.0535    ndcg@20 : 0.0643    mrr@5 : 0.0318    mrr@10 : 0.0367    mrr@20 : 0.0396
+Wed 11 Sep 2024 23:59:10 INFO  epoch 37 training [time: 9.66s, train loss: 394.2361]
+Wed 11 Sep 2024 23:59:11 INFO  epoch 37 evaluating [time: 0.94s, valid_score: 0.151700]
+Wed 11 Sep 2024 23:59:11 INFO  valid result: 
+hit@5 : 0.0721    hit@10 : 0.1078    hit@20 : 0.1517    ndcg@5 : 0.0417    ndcg@10 : 0.0532    ndcg@20 : 0.0643    mrr@5 : 0.0317    mrr@10 : 0.0364    mrr@20 : 0.0394
+Wed 11 Sep 2024 23:59:21 INFO  epoch 38 training [time: 9.69s, train loss: 393.8692]
+Wed 11 Sep 2024 23:59:22 INFO  epoch 38 evaluating [time: 0.95s, valid_score: 0.152500]
+Wed 11 Sep 2024 23:59:22 INFO  valid result: 
+hit@5 : 0.0715    hit@10 : 0.1083    hit@20 : 0.1525    ndcg@5 : 0.0415    ndcg@10 : 0.0534    ndcg@20 : 0.0645    mrr@5 : 0.0316    mrr@10 : 0.0365    mrr@20 : 0.0395
+Wed 11 Sep 2024 23:59:31 INFO  epoch 39 training [time: 9.71s, train loss: 393.3292]
+Wed 11 Sep 2024 23:59:32 INFO  epoch 39 evaluating [time: 0.94s, valid_score: 0.152300]
+Wed 11 Sep 2024 23:59:32 INFO  valid result: 
+hit@5 : 0.0714    hit@10 : 0.1079    hit@20 : 0.1523    ndcg@5 : 0.0413    ndcg@10 : 0.0531    ndcg@20 : 0.0643    mrr@5 : 0.0313    mrr@10 : 0.0362    mrr@20 : 0.0393
+Wed 11 Sep 2024 23:59:42 INFO  epoch 40 training [time: 9.69s, train loss: 392.7651]
+Wed 11 Sep 2024 23:59:43 INFO  epoch 40 evaluating [time: 0.94s, valid_score: 0.153000]
+Wed 11 Sep 2024 23:59:43 INFO  valid result: 
+hit@5 : 0.0718    hit@10 : 0.1078    hit@20 : 0.153    ndcg@5 : 0.0417    ndcg@10 : 0.0533    ndcg@20 : 0.0647    mrr@5 : 0.0317    mrr@10 : 0.0365    mrr@20 : 0.0396
+Wed 11 Sep 2024 23:59:43 INFO  Saving current: saved/M3Rec-Sep-11-2024_23-52-28.pth
+Wed 11 Sep 2024 23:59:53 INFO  epoch 41 training [time: 9.66s, train loss: 392.2736]
+Wed 11 Sep 2024 23:59:54 INFO  epoch 41 evaluating [time: 0.95s, valid_score: 0.151500]
+Wed 11 Sep 2024 23:59:54 INFO  valid result: 
+hit@5 : 0.0703    hit@10 : 0.1085    hit@20 : 0.1515    ndcg@5 : 0.0414    ndcg@10 : 0.0538    ndcg@20 : 0.0646    mrr@5 : 0.0319    mrr@10 : 0.037    mrr@20 : 0.0399
+Thu 12 Sep 2024 00:00:04 INFO  epoch 42 training [time: 9.69s, train loss: 392.2418]
+Thu 12 Sep 2024 00:00:04 INFO  epoch 42 evaluating [time: 0.94s, valid_score: 0.149600]
+Thu 12 Sep 2024 00:00:04 INFO  valid result: 
+hit@5 : 0.0717    hit@10 : 0.1079    hit@20 : 0.1496    ndcg@5 : 0.0413    ndcg@10 : 0.0529    ndcg@20 : 0.0634    mrr@5 : 0.0313    mrr@10 : 0.036    mrr@20 : 0.0389
+Thu 12 Sep 2024 00:00:14 INFO  epoch 43 training [time: 9.68s, train loss: 391.3072]
+Thu 12 Sep 2024 00:00:15 INFO  epoch 43 evaluating [time: 0.98s, valid_score: 0.152200]
+Thu 12 Sep 2024 00:00:15 INFO  valid result: 
+hit@5 : 0.0713    hit@10 : 0.1079    hit@20 : 0.1522    ndcg@5 : 0.0409    ndcg@10 : 0.0527    ndcg@20 : 0.0639    mrr@5 : 0.0309    mrr@10 : 0.0358    mrr@20 : 0.0388
+Thu 12 Sep 2024 00:00:25 INFO  epoch 44 training [time: 9.68s, train loss: 391.0541]
+Thu 12 Sep 2024 00:00:26 INFO  epoch 44 evaluating [time: 0.94s, valid_score: 0.151100]
+Thu 12 Sep 2024 00:00:26 INFO  valid result: 
+hit@5 : 0.0714    hit@10 : 0.1078    hit@20 : 0.1511    ndcg@5 : 0.0414    ndcg@10 : 0.0532    ndcg@20 : 0.0641    mrr@5 : 0.0316    mrr@10 : 0.0364    mrr@20 : 0.0394
+Thu 12 Sep 2024 00:00:35 INFO  epoch 45 training [time: 9.69s, train loss: 390.7577]
+Thu 12 Sep 2024 00:00:36 INFO  epoch 45 evaluating [time: 0.95s, valid_score: 0.151200]
+Thu 12 Sep 2024 00:00:36 INFO  valid result: 
+hit@5 : 0.0719    hit@10 : 0.1075    hit@20 : 0.1512    ndcg@5 : 0.0416    ndcg@10 : 0.0531    ndcg@20 : 0.0641    mrr@5 : 0.0316    mrr@10 : 0.0364    mrr@20 : 0.0394
+Thu 12 Sep 2024 00:00:46 INFO  epoch 46 training [time: 9.71s, train loss: 390.2481]
+Thu 12 Sep 2024 00:00:47 INFO  epoch 46 evaluating [time: 0.94s, valid_score: 0.154000]
+Thu 12 Sep 2024 00:00:47 INFO  valid result: 
+hit@5 : 0.0718    hit@10 : 0.1093    hit@20 : 0.154    ndcg@5 : 0.0418    ndcg@10 : 0.0539    ndcg@20 : 0.0652    mrr@5 : 0.0319    mrr@10 : 0.0369    mrr@20 : 0.04
+Thu 12 Sep 2024 00:00:48 INFO  Saving current: saved/M3Rec-Sep-11-2024_23-52-28.pth
+Thu 12 Sep 2024 00:00:57 INFO  epoch 47 training [time: 9.67s, train loss: 390.1778]
+Thu 12 Sep 2024 00:00:58 INFO  epoch 47 evaluating [time: 0.96s, valid_score: 0.152700]
+Thu 12 Sep 2024 00:00:58 INFO  valid result: 
+hit@5 : 0.0719    hit@10 : 0.1086    hit@20 : 0.1527    ndcg@5 : 0.0413    ndcg@10 : 0.0531    ndcg@20 : 0.0642    mrr@5 : 0.0312    mrr@10 : 0.036    mrr@20 : 0.0391
+Thu 12 Sep 2024 00:01:08 INFO  epoch 48 training [time: 9.72s, train loss: 389.7506]
+Thu 12 Sep 2024 00:01:09 INFO  epoch 48 evaluating [time: 0.94s, valid_score: 0.152700]
+Thu 12 Sep 2024 00:01:09 INFO  valid result: 
+hit@5 : 0.0717    hit@10 : 0.1081    hit@20 : 0.1527    ndcg@5 : 0.0416    ndcg@10 : 0.0533    ndcg@20 : 0.0645    mrr@5 : 0.0316    mrr@10 : 0.0364    mrr@20 : 0.0395
+Thu 12 Sep 2024 00:01:19 INFO  epoch 49 training [time: 9.73s, train loss: 389.2528]
+Thu 12 Sep 2024 00:01:19 INFO  epoch 49 evaluating [time: 0.94s, valid_score: 0.153800]
+Thu 12 Sep 2024 00:01:19 INFO  valid result: 
+hit@5 : 0.0719    hit@10 : 0.109    hit@20 : 0.1538    ndcg@5 : 0.0416    ndcg@10 : 0.0535    ndcg@20 : 0.0648    mrr@5 : 0.0315    mrr@10 : 0.0364    mrr@20 : 0.0395
+Thu 12 Sep 2024 00:01:29 INFO  epoch 50 training [time: 9.73s, train loss: 388.9739]
+Thu 12 Sep 2024 00:01:30 INFO  epoch 50 evaluating [time: 0.95s, valid_score: 0.153200]
+Thu 12 Sep 2024 00:01:30 INFO  valid result: 
+hit@5 : 0.0726    hit@10 : 0.1076    hit@20 : 0.1532    ndcg@5 : 0.0415    ndcg@10 : 0.0528    ndcg@20 : 0.0642    mrr@5 : 0.0312    mrr@10 : 0.0359    mrr@20 : 0.039
+Thu 12 Sep 2024 00:01:40 INFO  epoch 51 training [time: 9.77s, train loss: 388.4450]
+Thu 12 Sep 2024 00:01:41 INFO  epoch 51 evaluating [time: 0.96s, valid_score: 0.153600]
+Thu 12 Sep 2024 00:01:41 INFO  valid result: 
+hit@5 : 0.0724    hit@10 : 0.1087    hit@20 : 0.1536    ndcg@5 : 0.042    ndcg@10 : 0.0537    ndcg@20 : 0.065    mrr@5 : 0.0319    mrr@10 : 0.0367    mrr@20 : 0.0399
+Thu 12 Sep 2024 00:01:51 INFO  epoch 52 training [time: 9.78s, train loss: 388.1106]
+Thu 12 Sep 2024 00:01:52 INFO  epoch 52 evaluating [time: 0.93s, valid_score: 0.152700]
+Thu 12 Sep 2024 00:01:52 INFO  valid result: 
+hit@5 : 0.0707    hit@10 : 0.1071    hit@20 : 0.1527    ndcg@5 : 0.0413    ndcg@10 : 0.053    ndcg@20 : 0.0646    mrr@5 : 0.0316    mrr@10 : 0.0364    mrr@20 : 0.0396
+Thu 12 Sep 2024 00:01:52 INFO  Finished training, best eval result in epoch 46
+Thu 12 Sep 2024 00:01:52 INFO  Loading model structure and parameters from saved/M3Rec-Sep-11-2024_23-52-28.pth
+Thu 12 Sep 2024 00:01:54 INFO  The running environment of this training is as follows:
++-------------+----------------+
+| Environment |     Usage      |
++=============+================+
+| CPU         |     7.40 %     |
++-------------+----------------+
+| GPU         | 4.26 G/23.68 G |
++-------------+----------------+
+| Memory      | 3.42 G/62.53 G |
++-------------+----------------+
+Thu 12 Sep 2024 00:01:54 INFO  best valid : OrderedDict([('hit@5', 0.0718), ('hit@10', 0.1093), ('hit@20', 0.154), ('ndcg@5', 0.0418), ('ndcg@10', 0.0539), ('ndcg@20', 0.0652), ('mrr@5', 0.0319), ('mrr@10', 0.0369), ('mrr@20', 0.04)])
+Thu 12 Sep 2024 00:01:54 INFO  test result: OrderedDict([('hit@5', 0.0576), ('hit@10', 0.0874), ('hit@20', 0.1263), ('ndcg@5', 0.0339), ('ndcg@10', 0.0435), ('ndcg@20', 0.0533), ('mrr@5', 0.0261), ('mrr@10', 0.03), ('mrr@20', 0.0326)])

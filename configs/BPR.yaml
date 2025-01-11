@@ -1,0 +1,5 @@
+embedding_size: 64              # (int) The embedding size of users and items.
+dataset: Toys
+topk: [5,10,20]
+metrics: ['Hit', 'NDCG', 'MRR']
+stopping_step: 5
