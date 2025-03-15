@@ -37,6 +37,19 @@ All experiments are conducted on an NVIDIA 24GB 3090 GPU. The required packages 
 
 ## Citation
 
+If you find this work helpful to your research, please kindly consider citing our paper.
+
+
+```
+@inproceedings{guo2025m,
+  title={M 3 Rec: Selective State Space Models with Mixture-of-Modality Experts for Multi-Modal Sequential Recommendation},
+  author={Guo, Xu and Zhang, Tong and Xue, Yufei and Wang, Chenxu and Wang, Fuyun and Cui, Zhen},
+  booktitle={ICASSP 2025-2025 IEEE International Conference on Acoustics, Speech and Signal Processing (ICASSP)},
+  pages={1--5},
+  year={2025},
+  organization={IEEE}
+}
+```
 
 
 
