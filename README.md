@@ -1,7 +1,7 @@
 # M<sup>3</sup>Rec: Selective State Space Models with Mixture-of-Modality Experts for Multi-Modal Sequential Recommendation
 
 
-This is our Pytorch implementation for ICASSP 2025 paper [M<sup>3</sup>Rec: Selective State Space Models with Mixture-of-Modality Experts for Multi-Modal Sequential Recommendation]().
+This is our Pytorch implementation for ICASSP 2025 paper [M<sup>3</sup>Rec: Selective State Space Models with Mixture-of-Modality Experts for Multi-Modal Sequential Recommendation](https://ieeexplore.ieee.org/abstract/document/10887582).
 <p align="center">
 <img src="./img/Framework.png" alt="M3Rec" />
 </p>
